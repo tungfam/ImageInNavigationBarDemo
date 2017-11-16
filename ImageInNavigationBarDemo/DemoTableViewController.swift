@@ -75,7 +75,6 @@ class DemoTableViewController: UITableViewController {
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let height = navigationController?.navigationBar.frame.height else { return }
-        print(height)
         moveAndResizeImage(for: height)
     }
 
