@@ -30,6 +30,8 @@ class DemoTableViewController: UITableViewController {
         /// Height of NavBar for Large state. Usually it's just 96.5 but if you have a custom font for the title, please make sure to edit this value since it changes the height for Large state of NavBar
         static let NavBarHeightLargeState: CGFloat = 96.5
     }
+    
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +56,16 @@ class DemoTableViewController: UITableViewController {
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
             ])
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        showImage(false)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        showImage(true)
+    }
 
     // MARK: - Table view data source
 
@@ -69,6 +81,10 @@ class DemoTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DemoCell", for: indexPath)
         cell.textLabel?.text = "Sample"
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "SegueID", sender: nil)
     }
 
     // MARK: - Delegates
@@ -111,6 +127,12 @@ class DemoTableViewController: UITableViewController {
             imageView.transform = CGAffineTransform.identity
                 .scaledBy(x: scale, y: scale)
                 .translatedBy(x: xTranslation, y: yTranslation)
+        }
+    }
+    
+    private func showImage(_ show: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            self.imageView.alpha = show ? 1.0 : 0.0
         }
     }
 
