@@ -91,7 +91,7 @@ class DemoTableViewController: UITableViewController {
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let height = navigationController?.navigationBar.frame.height else { return }
-        moveAndResizeImage(for: height)
+        moveAndResizeImage2(for: height)
     }
 
     // MARK: - Private methods
@@ -128,6 +128,29 @@ class DemoTableViewController: UITableViewController {
                 .scaledBy(x: scale, y: scale)
                 .translatedBy(x: xTranslation, y: yTranslation)
         }
+    }
+    
+    private func moveAndResizeImage2(for height: CGFloat) {
+        // Value of difference between icons for large and small states
+        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - Const.SmallImageFactor) // 8.0
+        
+        // This value = 14. It equals to difference of 12 and 6 (bottom spacing for large and small states)
+        // Also it adds 8.0 (size difference when the image gets smaller size)
+        let maxYTranslation = Const.ImageBottomSpaceForLargeState - Const.ImageBottomSpaceForSmallState + sizeDiff
+        
+        let delta = height - Const.NavBarHeightSmallState
+        let coeff = delta / (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
+        
+        let sizeAddendumFactor = coeff * (1.0 - Const.SmallImageFactor)
+        let scale = min(1.0, sizeAddendumFactor + Const.SmallImageFactor)
+        
+        let yTranslation = max(0, min(maxYTranslation, (maxYTranslation - coeff * (Const.ImageBottomSpaceForSmallState + sizeDiff))))
+            
+        let xTranslation = max(0, sizeDiff - coeff * sizeDiff)
+        
+        imageView.transform = CGAffineTransform.identity
+            .scaledBy(x: scale, y: scale)
+            .translatedBy(x: xTranslation, y: yTranslation)
     }
     
     private func showImage(_ show: Bool) {
