@@ -10,20 +10,20 @@ import UIKit
 
 class DemoTableViewController: UITableViewController {
 
-    let imageView = UIImageView(image: UIImage(named: "image_name"))
+    private let imageView = UIImageView(image: UIImage(named: "image_name"))
 
     /// WARNING: Change these constants according to your project's design
     private struct Const {
         /// Image height/width for Large NavBar state
         static let ImageSizeForLargeState: CGFloat = 40
-        /// Spacing from right anchor of safe area to right anchor of Image
-        static let ImageRightSpace: CGFloat = 16
-        /// Spacing from bottom anchor of NavBar to bottom anchor of Image for Large NavBar state
-        static let ImageBottomSpaceForLargeState: CGFloat = 12
-        /// Spacing from bottom anchor of NavBar to bottom anchor of Image for Small NavBar state
-        static let ImageBottomSpaceForSmallState: CGFloat = 6
-        /// Factor used to multiply your ImageSizeForLargeState to get the Image Size for Small NavBar State. For example: Image size for Large NavBar is 40, Image size for Small NavBar is 32, then value of SmallImageFactor = 32/40 = 0.8
-        static let SmallImageFactor: CGFloat = 0.8
+        /// Margin from right anchor of safe area to right anchor of Image
+        static let ImageRightMargin: CGFloat = 16
+        /// Margin from bottom anchor of NavBar to bottom anchor of Image for Large NavBar state
+        static let ImageBottomMarginForLargeState: CGFloat = 12
+        /// Margin from bottom anchor of NavBar to bottom anchor of Image for Small NavBar state
+        static let ImageBottomMarginForSmallState: CGFloat = 6
+        /// Image height/width for Small NavBar state
+        static let ImageSizeForSmallState: CGFloat = 32
 
         /// Height of NavBar for Small state. Usually it's just 44
         static let NavBarHeightSmallState: CGFloat = 44
@@ -44,14 +44,14 @@ class DemoTableViewController: UITableViewController {
 
         // Initial setup for image for Large NavBar state since the the screen always has Large NavBar once it gets opened
         navigationBar.addSubview(imageView)
-        imageView.layer.cornerRadius = 20.0
+        imageView.layer.cornerRadius = Const.ImageSizeForLargeState / 2
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.rightAnchor.constraint(equalTo: navigationBar.rightAnchor,
-                                             constant: -Const.ImageRightSpace),
+                                             constant: -Const.ImageRightMargin),
             imageView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor,
-                                              constant: -Const.ImageBottomSpaceForLargeState),
+                                              constant: -Const.ImageBottomMarginForLargeState),
             imageView.heightAnchor.constraint(equalToConstant: Const.ImageSizeForLargeState),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
             ])
@@ -97,17 +97,19 @@ class DemoTableViewController: UITableViewController {
     // MARK: - Private methods
 
     private func moveAndResizeImage(for height: CGFloat) {
-        // Value of difference between icons for large and small states
-        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - Const.SmallImageFactor) // 8.0
+        let factor = Const.ImageSizeForSmallState / Const.ImageSizeForLargeState
 
-        // This value = 14. It equals to difference of 12 and 6 (bottom spacing for large and small states)
+        // Value of difference between icons for large and small states
+        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - factor) // 8.0
+
+        // This value = 14. It equals to difference of 12 and 6 (bottom margin for large and small states)
         // Also it adds 8.0 (size difference when the image gets smaller size)
-        let maxYTranslation = Const.ImageBottomSpaceForLargeState - Const.ImageBottomSpaceForSmallState + sizeDiff
+        let maxYTranslation = Const.ImageBottomMarginForLargeState - Const.ImageBottomMarginForSmallState + sizeDiff
 
         if height <= Const.NavBarHeightSmallState {
             // If NavBar height matches or smaller than Small state we tranform image to small state
             imageView.transform = CGAffineTransform.identity
-                .scaledBy(x: Const.SmallImageFactor, y: Const.SmallImageFactor)
+                .scaledBy(x: factor, y: factor)
                 .translatedBy(x: sizeDiff, y: maxYTranslation)
         } else if height >= Const.NavBarHeightLargeState {
             // If NavBar height matches or bigger than Large state we tranform image to large state (basically to normal size)
@@ -115,13 +117,13 @@ class DemoTableViewController: UITableViewController {
                 .scaledBy(x: 1.0, y: 1.0)
                 .translatedBy(x: 0.0, y: 0.0)
         } else {
-            // If NavBar is in between of Small and Large states we tranform image and move bottom and right spacings proportionally to the size of NavBar. This way it creates a smooth animation for image resizing
+            // If NavBar is in between of Small and Large states we tranform image and move bottom and right margins proportionally to the size of NavBar. This way it creates a smooth animation for image resizing
             let delta = height - Const.NavBarHeightSmallState
             let coeff = delta / (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
-            let sizeAddendumFactor = coeff * (1.0 - Const.SmallImageFactor)
-            let scale = sizeAddendumFactor + Const.SmallImageFactor
+            let sizeAddendumFactor = coeff * (1.0 - factor)
+            let scale = sizeAddendumFactor + factor
 
-            let yTranslation = maxYTranslation - (coeff * Const.ImageBottomSpaceForSmallState + coeff * sizeDiff)
+            let yTranslation = maxYTranslation - (coeff * Const.ImageBottomMarginForSmallState + coeff * sizeDiff)
             let xTranslation = sizeDiff - coeff * sizeDiff
 
             imageView.transform = CGAffineTransform.identity
@@ -131,20 +133,27 @@ class DemoTableViewController: UITableViewController {
     }
     
     private func moveAndResizeImage2(for height: CGFloat) {
+        let coeff: CGFloat = {
+            let delta = height - Const.NavBarHeightSmallState
+            let heightDifferenceBetweenStates = (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
+            return delta / heightDifferenceBetweenStates
+        }()
+
+        let factor = Const.ImageSizeForSmallState / Const.ImageSizeForLargeState
+
+        let scale: CGFloat = {
+            let sizeAddendumFactor = coeff * (1.0 - factor)
+            return min(1.0, sizeAddendumFactor + factor)
+        }()
+
         // Value of difference between icons for large and small states
-        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - Const.SmallImageFactor) // 8.0
+        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - factor) // 8.0
         
-        // This value = 14. It equals to difference of 12 and 6 (bottom spacing for large and small states)
-        // Also it adds 8.0 (size difference when the image gets smaller size)
-        let maxYTranslation = Const.ImageBottomSpaceForLargeState - Const.ImageBottomSpaceForSmallState + sizeDiff
-        
-        let delta = height - Const.NavBarHeightSmallState
-        let coeff = delta / (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
-        
-        let sizeAddendumFactor = coeff * (1.0 - Const.SmallImageFactor)
-        let scale = min(1.0, sizeAddendumFactor + Const.SmallImageFactor)
-        
-        let yTranslation = max(0, min(maxYTranslation, (maxYTranslation - coeff * (Const.ImageBottomSpaceForSmallState + sizeDiff))))
+        let yTranslation: CGFloat = {
+            /// This value = 14. It equals to difference of 12 and 6 (bottom margin for large and small states). Also it adds 8.0 (size difference when the image gets smaller size)
+            let maxYTranslation = Const.ImageBottomMarginForLargeState - Const.ImageBottomMarginForSmallState + sizeDiff
+            return max(0, min(maxYTranslation, (maxYTranslation - coeff * (Const.ImageBottomMarginForSmallState + sizeDiff))))
+        }()
             
         let xTranslation = max(0, sizeDiff - coeff * sizeDiff)
         
@@ -153,6 +162,9 @@ class DemoTableViewController: UITableViewController {
             .translatedBy(x: xTranslation, y: yTranslation)
     }
     
+    /// Show or hide the image from NavBar while going to next screen or back to initial screen
+    ///
+    /// - Parameter show: show or hide the image from NavBar
     private func showImage(_ show: Bool) {
         UIView.animate(withDuration: 0.2) {
             self.imageView.alpha = show ? 1.0 : 0.0

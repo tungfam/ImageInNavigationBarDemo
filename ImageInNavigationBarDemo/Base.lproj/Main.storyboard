@@ -42,7 +42,7 @@
             </objects>
             <point key="canvasLocation" x="503.19999999999999" y="116.49175412293854"/>
         </scene>
-        <!--View Controller-->
+        <!--No Image here-->
         <scene sceneID="EgN-kL-7G0">
             <objects>
                 <viewController id="txG-pg-8R0" sceneMemberID="viewController">
@@ -52,6 +52,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="OxS-OU-GVT"/>
                     </view>
+                    <navigationItem key="navigationItem" title="No Image here" id="802-Sn-nOL"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1dI-Ub-MA6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
