@@ -95,42 +95,6 @@ class DemoTableViewController: UITableViewController {
     }
 
     // MARK: - Private methods
-
-    private func moveAndResizeImage(for height: CGFloat) {
-        let factor = Const.ImageSizeForSmallState / Const.ImageSizeForLargeState
-
-        // Value of difference between icons for large and small states
-        let sizeDiff = Const.ImageSizeForLargeState * (1.0 - factor) // 8.0
-
-        // This value = 14. It equals to difference of 12 and 6 (bottom margin for large and small states)
-        // Also it adds 8.0 (size difference when the image gets smaller size)
-        let maxYTranslation = Const.ImageBottomMarginForLargeState - Const.ImageBottomMarginForSmallState + sizeDiff
-
-        if height <= Const.NavBarHeightSmallState {
-            // If NavBar height matches or smaller than Small state we tranform image to small state
-            imageView.transform = CGAffineTransform.identity
-                .scaledBy(x: factor, y: factor)
-                .translatedBy(x: sizeDiff, y: maxYTranslation)
-        } else if height >= Const.NavBarHeightLargeState {
-            // If NavBar height matches or bigger than Large state we tranform image to large state (basically to normal size)
-            imageView.transform = CGAffineTransform.identity
-                .scaledBy(x: 1.0, y: 1.0)
-                .translatedBy(x: 0.0, y: 0.0)
-        } else {
-            // If NavBar is in between of Small and Large states we tranform image and move bottom and right margins proportionally to the size of NavBar. This way it creates a smooth animation for image resizing
-            let delta = height - Const.NavBarHeightSmallState
-            let coeff = delta / (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
-            let sizeAddendumFactor = coeff * (1.0 - factor)
-            let scale = sizeAddendumFactor + factor
-
-            let yTranslation = maxYTranslation - (coeff * Const.ImageBottomMarginForSmallState + coeff * sizeDiff)
-            let xTranslation = sizeDiff - coeff * sizeDiff
-
-            imageView.transform = CGAffineTransform.identity
-                .scaledBy(x: scale, y: scale)
-                .translatedBy(x: xTranslation, y: yTranslation)
-        }
-    }
     
     private func moveAndResizeImage2(for height: CGFloat) {
         let coeff: CGFloat = {
