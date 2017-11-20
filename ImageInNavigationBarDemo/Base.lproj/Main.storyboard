@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -33,10 +34,29 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Ykc-Kr-uNU"/>
+                    <connections>
+                        <segue destination="txG-pg-8R0" kind="show" identifier="SegueID" id="j4P-eB-5OA"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oU7-T1-hfh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="503.19999999999999" y="116.49175412293854"/>
+        </scene>
+        <!--No Image here-->
+        <scene sceneID="EgN-kL-7G0">
+            <objects>
+                <viewController id="txG-pg-8R0" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="io2-qy-tQC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="OxS-OU-GVT"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="No Image here" id="802-Sn-nOL"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1dI-Ub-MA6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1273" y="116"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KTf-A6-3Bd">
