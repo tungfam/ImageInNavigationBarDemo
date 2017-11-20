@@ -67,36 +67,16 @@ class DemoTableViewController: UITableViewController {
         showImage(true)
     }
 
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DemoCell", for: indexPath)
-        cell.textLabel?.text = "Sample"
-        return cell
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "SegueID", sender: nil)
-    }
-
-    // MARK: - Delegates
+    // MARK: - Scroll View Delegates
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let height = navigationController?.navigationBar.frame.height else { return }
-        moveAndResizeImage2(for: height)
+        moveAndResizeImage(for: height)
     }
 
     // MARK: - Private methods
     
-    private func moveAndResizeImage2(for height: CGFloat) {
+    private func moveAndResizeImage(for height: CGFloat) {
         let coeff: CGFloat = {
             let delta = height - Const.NavBarHeightSmallState
             let heightDifferenceBetweenStates = (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
@@ -135,5 +115,26 @@ class DemoTableViewController: UITableViewController {
         }
     }
 
+}
+
+extension DemoTableViewController {
+    // MARK: - Table view data source
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DemoCell", for: indexPath)
+        cell.textLabel?.text = "Sample"
+        return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "SegueID", sender: nil)
+    }
 }
 
