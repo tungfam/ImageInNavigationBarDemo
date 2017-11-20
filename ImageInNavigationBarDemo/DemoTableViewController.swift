@@ -24,7 +24,6 @@ class DemoTableViewController: UITableViewController {
         static let ImageBottomMarginForSmallState: CGFloat = 6
         /// Image height/width for Small NavBar state
         static let ImageSizeForSmallState: CGFloat = 32
-
         /// Height of NavBar for Small state. Usually it's just 44
         static let NavBarHeightSmallState: CGFloat = 44
         /// Height of NavBar for Large state. Usually it's just 96.5 but if you have a custom font for the title, please make sure to edit this value since it changes the height for Large state of NavBar
@@ -35,7 +34,6 @@ class DemoTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupUI()
     }
     
@@ -63,9 +61,8 @@ class DemoTableViewController: UITableViewController {
 
         title = "Large Title"
 
-        guard let navigationBar = self.navigationController?.navigationBar else { return }
-
         // Initial setup for image for Large NavBar state since the the screen always has Large NavBar once it gets opened
+        guard let navigationBar = self.navigationController?.navigationBar else { return }
         navigationBar.addSubview(imageView)
         imageView.layer.cornerRadius = Const.ImageSizeForLargeState / 2
         imageView.clipsToBounds = true
