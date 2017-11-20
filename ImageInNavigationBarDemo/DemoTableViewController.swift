@@ -36,25 +36,7 @@ class DemoTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationController?.navigationBar.prefersLargeTitles = true
-
-        title = "Large Title"
-
-        guard let navigationBar = self.navigationController?.navigationBar else { return }
-
-        // Initial setup for image for Large NavBar state since the the screen always has Large NavBar once it gets opened
-        navigationBar.addSubview(imageView)
-        imageView.layer.cornerRadius = Const.ImageSizeForLargeState / 2
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.rightAnchor.constraint(equalTo: navigationBar.rightAnchor,
-                                             constant: -Const.ImageRightMargin),
-            imageView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor,
-                                              constant: -Const.ImageBottomMarginForLargeState),
-            imageView.heightAnchor.constraint(equalToConstant: Const.ImageSizeForLargeState),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
-            ])
+        setupUI()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -75,6 +57,28 @@ class DemoTableViewController: UITableViewController {
     }
 
     // MARK: - Private methods
+
+    private func setupUI() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        title = "Large Title"
+
+        guard let navigationBar = self.navigationController?.navigationBar else { return }
+
+        // Initial setup for image for Large NavBar state since the the screen always has Large NavBar once it gets opened
+        navigationBar.addSubview(imageView)
+        imageView.layer.cornerRadius = Const.ImageSizeForLargeState / 2
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.rightAnchor.constraint(equalTo: navigationBar.rightAnchor,
+                                             constant: -Const.ImageRightMargin),
+            imageView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor,
+                                              constant: -Const.ImageBottomMarginForLargeState),
+            imageView.heightAnchor.constraint(equalToConstant: Const.ImageSizeForLargeState),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
+            ])
+    }
     
     private func moveAndResizeImage(for height: CGFloat) {
         let coeff: CGFloat = {
