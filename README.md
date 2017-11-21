@@ -1,5 +1,5 @@
 # Demo project to build resizing image in Navigation Bar with Large Title (iOS11)
-Demo project that shows a resizable image in right top corner of Navigation Bar with Large Title (iOS11) 
+Demo project that shows the implementation of an image which resizes according to the height of navigation bar with a large title (iOS 11).
 
 ## Tutorial
 
