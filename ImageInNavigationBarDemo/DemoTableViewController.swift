@@ -35,6 +35,8 @@ class DemoTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+
+        showTutorialAlert()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -59,7 +61,7 @@ class DemoTableViewController: UITableViewController {
     private func setupUI() {
         navigationController?.navigationBar.prefersLargeTitles = true
 
-        title = "Large Title"
+        title = "Resizing image 👉"
 
         // Initial setup for image for Large NavBar state since the the screen always has Large NavBar once it gets opened
         guard let navigationBar = self.navigationController?.navigationBar else { return }
@@ -116,6 +118,13 @@ class DemoTableViewController: UITableViewController {
         }
     }
 
+    private func showTutorialAlert() {
+        let alert = UIAlertController(title: "Tutorial", message: "Scroll down and up to resize the image in navigation bar.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Got it!", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
+    }
+
 }
 
 extension DemoTableViewController {
@@ -130,7 +139,7 @@ extension DemoTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DemoCell", for: indexPath)
-        cell.textLabel?.text = "Sample"
+        cell.textLabel?.text = "row \(indexPath.row)"
         return cell
     }
 
