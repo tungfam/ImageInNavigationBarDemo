@@ -8,10 +8,7 @@
 
 import UIKit
 
-class DemoTableViewController: UITableViewController {
-
-    private let imageView = UIImageView(image: UIImage(named: "image_name"))
-
+extension DemoTableViewController {
     /// WARNING: Change these constants according to your project's design
     private struct Const {
         /// Image height/width for Large NavBar state
@@ -28,15 +25,22 @@ class DemoTableViewController: UITableViewController {
         static let NavBarHeightSmallState: CGFloat = 44
         /// Height of NavBar for Large state. Usually it's just 96.5 but if you have a custom font for the title, please make sure to edit this value since it changes the height for Large state of NavBar
         static let NavBarHeightLargeState: CGFloat = 96.5
+        /// Image height/width for Landscape state
+        static let ScaleForImageSizeForLandscape: CGFloat = 0.65
     }
+}
+
+class DemoTableViewController: UITableViewController {
+
+    private let imageView = UIImageView(image: UIImage(named: "image_name"))
     
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-
         showTutorialAlert()
+        observeAndHandleOrientationMode()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -49,11 +53,19 @@ class DemoTableViewController: UITableViewController {
         showImage(true)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if UIDevice.current.orientation.isPortrait {
+            moveAndResizeImageForPortrait()
+        }
+    }
+
     // MARK: - Scroll View Delegates
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let height = navigationController?.navigationBar.frame.height else { return }
-        moveAndResizeImage(for: height)
+        if UIDevice.current.orientation.isPortrait {
+            moveAndResizeImageForPortrait()
+        }
     }
 
     // MARK: - Private methods
@@ -78,8 +90,22 @@ class DemoTableViewController: UITableViewController {
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor)
             ])
     }
+
+    private func observeAndHandleOrientationMode() {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIDeviceOrientationDidChange, object: nil, queue: OperationQueue.current) { [weak self] _ in
+            if UIDevice.current.orientation.isPortrait {
+                self?.title = "Resizing image 👉"
+                self?.moveAndResizeImageForPortrait()
+            } else if UIDevice.current.orientation.isLandscape {
+                self?.title = "Non resizing image 👉"
+                self?.resizeImageForLandscape()
+            }
+        }
+    }
     
-    private func moveAndResizeImage(for height: CGFloat) {
+    private func moveAndResizeImageForPortrait() {
+        guard let height = navigationController?.navigationBar.frame.height else { return }
+
         let coeff: CGFloat = {
             let delta = height - Const.NavBarHeightSmallState
             let heightDifferenceBetweenStates = (Const.NavBarHeightLargeState - Const.NavBarHeightSmallState)
@@ -107,6 +133,13 @@ class DemoTableViewController: UITableViewController {
         imageView.transform = CGAffineTransform.identity
             .scaledBy(x: scale, y: scale)
             .translatedBy(x: xTranslation, y: yTranslation)
+    }
+
+    private func resizeImageForLandscape() {
+        let yTranslation = Const.ImageSizeForLargeState * Const.ScaleForImageSizeForLandscape
+        imageView.transform = CGAffineTransform.identity
+            .scaledBy(x: Const.ScaleForImageSizeForLandscape, y: Const.ScaleForImageSizeForLandscape)
+            .translatedBy(x: 0, y: yTranslation)
     }
     
     /// Show or hide the image from NavBar while going to next screen or back to initial screen
