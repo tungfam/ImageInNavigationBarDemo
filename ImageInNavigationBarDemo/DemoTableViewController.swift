@@ -33,6 +33,7 @@ extension DemoTableViewController {
 class DemoTableViewController: UITableViewController {
 
     private let imageView = UIImageView(image: UIImage(named: "image_name"))
+    private var shoulResize: Bool?
     
     // MARK: - Lifecycle
 
@@ -41,6 +42,12 @@ class DemoTableViewController: UITableViewController {
         setupUI()
         showTutorialAlert()
         observeAndHandleOrientationMode()
+
+        if UIDevice.current.orientation.isPortrait {
+            shoulResize = true
+        } else if UIDevice.current.orientation.isLandscape {
+            shoulResize = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -55,7 +62,10 @@ class DemoTableViewController: UITableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if UIDevice.current.orientation.isPortrait {
+        guard let shoulResize = shoulResize
+            else { assertionFailure("shoulResize wasn't set. reason could be non-handled device orientation state"); return }
+
+        if shoulResize {
             moveAndResizeImageForPortrait()
         }
     }
@@ -63,7 +73,10 @@ class DemoTableViewController: UITableViewController {
     // MARK: - Scroll View Delegates
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if UIDevice.current.orientation.isPortrait {
+        guard let shoulResize = shoulResize
+            else { assertionFailure("shoulResize wasn't set. reason could be non-handled device orientation state"); return }
+
+        if shoulResize {
             moveAndResizeImageForPortrait()
         }
     }
@@ -93,12 +106,15 @@ class DemoTableViewController: UITableViewController {
 
     private func observeAndHandleOrientationMode() {
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UIDeviceOrientationDidChange, object: nil, queue: OperationQueue.current) { [weak self] _ in
+            
             if UIDevice.current.orientation.isPortrait {
                 self?.title = "Resizing image 👉"
                 self?.moveAndResizeImageForPortrait()
+                self?.shoulResize = true
             } else if UIDevice.current.orientation.isLandscape {
-                self?.title = "Non resizing image 👉"
+                self?.title = "Non 🙅🏽‍♂️ resizing image"
                 self?.resizeImageForLandscape()
+                self?.shoulResize = false
             }
         }
     }
