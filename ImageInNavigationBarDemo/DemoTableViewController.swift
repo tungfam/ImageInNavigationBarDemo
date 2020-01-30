@@ -30,10 +30,10 @@ extension DemoTableViewController {
     }
 }
 
-class DemoTableViewController: UITableViewController {
+final class DemoTableViewController: UITableViewController {
 
     private let imageView = UIImageView(image: UIImage(named: "image_name"))
-    private var shoulResize: Bool?
+    private var shouldResize: Bool?
     
     // MARK: - Lifecycle
 
@@ -44,9 +44,9 @@ class DemoTableViewController: UITableViewController {
         observeAndHandleOrientationMode()
 
         if UIDevice.current.orientation.isPortrait {
-            shoulResize = true
+            shouldResize = true
         } else if UIDevice.current.orientation.isLandscape {
-            shoulResize = false
+            shouldResize = false
         }
     }
     
@@ -62,10 +62,10 @@ class DemoTableViewController: UITableViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard let shoulResize = shoulResize
-            else { assertionFailure("shoulResize wasn't set. reason could be non-handled device orientation state"); return }
+        guard let shouldResize = shouldResize
+            else { assertionFailure("shouldResize wasn't set. reason could be non-handled device orientation state"); return }
 
-        if shoulResize {
+        if shouldResize {
             moveAndResizeImageForPortrait()
         }
     }
@@ -73,10 +73,10 @@ class DemoTableViewController: UITableViewController {
     // MARK: - Scroll View Delegates
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let shoulResize = shoulResize
-            else { assertionFailure("shoulResize wasn't set. reason could be non-handled device orientation state"); return }
+        guard let shouldResize = shouldResize
+            else { assertionFailure("shouldResize wasn't set. reason could be non-handled device orientation state"); return }
 
-        if shoulResize {
+        if shouldResize {
             moveAndResizeImageForPortrait()
         }
     }
@@ -110,11 +110,11 @@ class DemoTableViewController: UITableViewController {
             if UIDevice.current.orientation.isPortrait {
                 self?.title = "Resizing image 👉"
                 self?.moveAndResizeImageForPortrait()
-                self?.shoulResize = true
+                self?.shouldResize = true
             } else if UIDevice.current.orientation.isLandscape {
                 self?.title = "Non 🙅🏽‍♂️ resizing image"
                 self?.resizeImageForLandscape()
-                self?.shoulResize = false
+                self?.shouldResize = false
             }
         }
     }
